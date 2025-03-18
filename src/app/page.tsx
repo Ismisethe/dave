@@ -8,12 +8,12 @@ import path from 'path';
 import SeoContent from '@/components/SeoContent';
 
 const images = [
-  '/images/towtruck4.webp',
-  '/images/towtruck.jpeg',
-  '/images/tow truck 7.jpeg',
-  '/images/tow truck 5.webp',
-  '/images/tow truck 3.jpeg',
-  '/images/tow truck 2.jpeg'
+  '/Images/towtruck4.webp',
+  '/Images/towtruck.jpeg',
+  '/Images/tow truck 7.jpeg',
+  '/Images/tow truck 5.webp',
+  '/Images/tow truck 3.jpeg',
+  '/Images/tow truck 2.jpeg'
 ];
 
 async function getFeaturedBusinesses(): Promise<Business[]> {
@@ -37,7 +37,7 @@ export default async function HomePage() {
       <div className="relative h-[600px] overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="/images/towtruck4.webp"
+            src="/Images/towtruck4.webp"
             alt="NYC Tow Truck Service"
             fill
             style={{ objectFit: 'cover' }}
@@ -115,7 +115,7 @@ export default async function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="relative h-[400px] rounded-xl overflow-hidden group">
               <Image
-                src="/images/tow truck 2.jpeg"
+                src="/Images/tow truck 2.jpeg"
                 alt="Heavy Duty Towing"
                 fill
                 style={{ objectFit: 'cover' }}
@@ -132,7 +132,7 @@ export default async function HomePage() {
             </div>
             <div className="relative h-[400px] rounded-xl overflow-hidden group">
               <Image
-                src="/images/tow truck 3.jpeg"
+                src="/Images/tow truck 3.jpeg"
                 alt="Emergency Roadside Assistance"
                 fill
                 style={{ objectFit: 'cover' }}
@@ -161,7 +161,7 @@ export default async function HomePage() {
               className="relative h-[300px] rounded-xl overflow-hidden group"
             >
               <Image
-                src="/images/towtruck4.webp"
+                src="/Images/towtruck4.webp"
                 alt="Manhattan Towing"
                 fill
                 style={{ objectFit: 'cover' }}
@@ -178,7 +178,7 @@ export default async function HomePage() {
               className="relative h-[300px] rounded-xl overflow-hidden group"
             >
               <Image
-                src="/images/tow truck 5.webp"
+                src="/Images/tow truck 5.webp"
                 alt="Brooklyn Towing"
                 fill
                 style={{ objectFit: 'cover' }}
@@ -195,7 +195,7 @@ export default async function HomePage() {
               className="relative h-[300px] rounded-xl overflow-hidden group"
             >
               <Image
-                src="/images/tow truck 7.jpeg"
+                src="/Images/tow truck 7.jpeg"
                 alt="Queens Towing"
                 fill
                 style={{ objectFit: 'cover' }}
@@ -212,7 +212,7 @@ export default async function HomePage() {
               className="relative h-[300px] rounded-xl overflow-hidden group"
             >
               <Image
-                src="/images/towtruck.jpeg"
+                src="/Images/towtruck.jpeg"
                 alt="Bronx Towing"
                 fill
                 style={{ objectFit: 'cover' }}
@@ -229,7 +229,7 @@ export default async function HomePage() {
               className="relative h-[300px] rounded-xl overflow-hidden group col-span-1 md:col-span-2 lg:col-span-1"
             >
               <Image
-                src="/images/tow truck 2.jpeg"
+                src="/Images/tow truck 2.jpeg"
                 alt="Staten Island Towing"
                 fill
                 style={{ objectFit: 'cover' }}

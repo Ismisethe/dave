@@ -1,25 +1,25 @@
 'use client'
 
-import React from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
+import { SearchParams } from '@/types/search'
 
 interface PaginationProps {
   currentPage: number
   totalPages: number
+  searchParams?: SearchParams
 }
 
-export default function Pagination({ currentPage, totalPages }: PaginationProps) {
+export default function Pagination({ currentPage, totalPages, searchParams = {} }: PaginationProps) {
   const router = useRouter()
-  const searchParams = useSearchParams()
 
   const handlePageChange = (page: number) => {
-    const params = new URLSearchParams(searchParams.toString())
+    const params = new URLSearchParams(window.location.search)
     params.set('page', page.toString())
     router.push(`/directory?${params.toString()}`)
   }
 
   const renderPageNumbers = () => {
-    const pages: React.ReactNode[] = []
+    const pages = []
     const maxVisiblePages = 5
     let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2))
     let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1)
@@ -48,7 +48,7 @@ export default function Pagination({ currentPage, totalPages }: PaginationProps)
   }
 
   return (
-    <div className="flex justify-center items-center space-x-2 mt-8">
+    <div className="flex justify-center items-center space-x-2">
       <button
         onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1}
@@ -56,9 +56,7 @@ export default function Pagination({ currentPage, totalPages }: PaginationProps)
       >
         Previous
       </button>
-
       {renderPageNumbers()}
-
       <button
         onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPages}

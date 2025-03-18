@@ -1,20 +1,17 @@
 'use client'
 
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
+import { SearchParams } from '@/types/search'
 
 interface DirectoryFiltersProps {
-  filters: {
-    borough?: string
-    enrollmentStatus?: 'DARP' | 'ROTOW' | 'BOTH'
-  }
+  searchParams?: SearchParams
 }
 
-export default function DirectoryFilters({ filters }: DirectoryFiltersProps) {
+export default function DirectoryFilters({ searchParams = {} }: DirectoryFiltersProps) {
   const router = useRouter()
-  const searchParams = useSearchParams()
 
   const updateFilter = (key: string, value: string | undefined) => {
-    const params = new URLSearchParams(searchParams.toString())
+    const params = new URLSearchParams(window.location.search)
     
     if (value) {
       params.set(key, value)
@@ -29,57 +26,53 @@ export default function DirectoryFilters({ filters }: DirectoryFiltersProps) {
   }
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label htmlFor="borough" className="block text-sm font-medium text-gray-700 mb-2">
-            Borough
-          </label>
-          <select
-            id="borough"
-            value={filters.borough || ''}
-            onChange={(e) => updateFilter('borough', e.target.value || undefined)}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-          >
-            <option value="">All Boroughs</option>
-            <option value="Manhattan">Manhattan</option>
-            <option value="Brooklyn">Brooklyn</option>
-            <option value="Queens">Queens</option>
-            <option value="Bronx">Bronx</option>
-            <option value="Staten Island">Staten Island</option>
-          </select>
-        </div>
+    <div className="bg-white rounded-lg shadow p-6">
+      <h2 className="text-xl font-semibold mb-4">Filters</h2>
+      
+      {/* Borough Filter */}
+      <div className="mb-6">
+        <h3 className="text-sm font-medium text-gray-700 mb-2">Borough</h3>
+        <select
+          name="borough"
+          defaultValue={searchParams?.borough || ''}
+          onChange={(e) => updateFilter('borough', e.target.value || undefined)}
+          className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+        >
+          <option value="">All Boroughs</option>
+          <option value="Manhattan">Manhattan</option>
+          <option value="Brooklyn">Brooklyn</option>
+          <option value="Queens">Queens</option>
+          <option value="Bronx">Bronx</option>
+          <option value="Staten Island">Staten Island</option>
+        </select>
+      </div>
 
-        <div>
-          <label htmlFor="enrollment" className="block text-sm font-medium text-gray-700 mb-2">
-            Program Enrollment
+      {/* Certification Filters */}
+      <div className="mb-6">
+        <h3 className="text-sm font-medium text-gray-700 mb-2">Certifications</h3>
+        <div className="space-y-2">
+          <label className="flex items-center">
+            <input
+              type="checkbox"
+              name="darpStatus"
+              value="ENROLLED"
+              defaultChecked={searchParams?.darpStatus === 'ENROLLED'}
+              onChange={(e) => updateFilter('darpStatus', e.target.checked ? 'ENROLLED' : undefined)}
+              className="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+            <span className="ml-2 text-sm text-gray-700">DARP Certified</span>
           </label>
-          <div className="space-y-2">
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                id="darp"
-                checked={searchParams.get('darpStatus') === 'ENROLLED'}
-                onChange={(e) => updateFilter('darpStatus', e.target.checked ? 'ENROLLED' : undefined)}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <label htmlFor="darp" className="ml-2 text-sm text-gray-700">
-                DARP
-              </label>
-            </div>
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                id="rotow"
-                checked={searchParams.get('rotowStatus') === 'ENROLLED'}
-                onChange={(e) => updateFilter('rotowStatus', e.target.checked ? 'ENROLLED' : undefined)}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <label htmlFor="rotow" className="ml-2 text-sm text-gray-700">
-                ROTOW
-              </label>
-            </div>
-          </div>
+          <label className="flex items-center">
+            <input
+              type="checkbox"
+              name="rotowStatus"
+              value="ENROLLED"
+              defaultChecked={searchParams?.rotowStatus === 'ENROLLED'}
+              onChange={(e) => updateFilter('rotowStatus', e.target.checked ? 'ENROLLED' : undefined)}
+              className="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+            <span className="ml-2 text-sm text-gray-700">ROTOW Certified</span>
+          </label>
         </div>
       </div>
     </div>

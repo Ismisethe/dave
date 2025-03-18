@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://newyorktowtrucks.com/sitemap.xml
+Sitemap: https://newyorktowtruck.com/sitemap.xml
 
 # Crawl-delay for all bots
 Crawl-delay: 1 

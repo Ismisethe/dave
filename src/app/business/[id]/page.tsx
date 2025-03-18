@@ -1,34 +1,27 @@
 import { Metadata } from 'next'
 import { getBusiness } from '@/lib/api'
-import Link from 'next/link'
-import { notFound } from 'next/navigation'
 import { Business } from '@/types/business'
 import fs from 'fs/promises'
 import path from 'path'
+import { notFound } from 'next/navigation'
 
-interface BusinessPageProps {
-  params: {
-    id: string
-  }
+interface Props {
+  params: { id: string }
 }
 
-export async function generateMetadata({ params }: BusinessPageProps): Promise<Metadata> {
-  const business = await getBusiness(params.id);
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const business = await getBusiness(params.id)
   
   if (!business) {
     return {
-      title: 'Business Not Found',
-      description: 'The requested tow truck business could not be found.'
+      title: 'Business Not Found - NYC Tow Truck Directory',
+      description: 'The requested business could not be found in our directory.',
     }
   }
-
+  
   return {
-    title: `${business.businessName} | NYC Tow Truck Service`,
-    description: `Contact ${business.businessName} for professional towing services in ${business.borough}, NYC. Licensed tow truck company offering 24/7 emergency towing and roadside assistance.`,
-    openGraph: {
-      title: `${business.businessName} | NYC Tow Truck Service`,
-      description: `Contact ${business.businessName} for professional towing services in ${business.borough}, NYC. Licensed tow truck company offering 24/7 emergency towing and roadside assistance.`,
-    }
+    title: `${business.businessName} - NYC Tow Truck Directory`,
+    description: `View details about ${business.businessName}, a licensed tow truck company in ${business.borough}, New York City.`,
   }
 }
 
@@ -36,10 +29,10 @@ export async function generateStaticParams() {
   try {
     const filePath = path.join(process.cwd(), 'public', 'data', 'businesses.json')
     const jsonData = await fs.readFile(filePath, 'utf8')
-    const businesses = JSON.parse(jsonData)
+    const data = JSON.parse(jsonData)
     
-    return businesses.map((business: Business) => ({
-      id: business.businessUniqueId
+    return data.map((business: Business) => ({
+      id: business.businessUniqueId,
     }))
   } catch (error) {
     console.error('Error generating static params:', error)
@@ -47,118 +40,142 @@ export async function generateStaticParams() {
   }
 }
 
-export default async function BusinessPage({ params }: BusinessPageProps) {
-  const business = await getBusiness(params.id);
+export default async function BusinessPage({ params }: Props) {
+  const business = await getBusiness(params.id)
 
   if (!business) {
-    notFound();
+    notFound()
   }
 
-  const address = `${business.buildingNumber} ${business.street}, ${business.borough}, NY ${business.zipCode}`
-  const googleMapsUrl = `https://www.google.com/maps/place/${encodeURIComponent(address)}`
-  const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`
-  const embedUrl = `https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&q=${encodeURIComponent(address)}&zoom=15&maptype=roadmap`
-
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-4xl mx-auto px-4">
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
+    <div className="container mx-auto px-4 py-8">
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          <div className="relative h-64 bg-gradient-to-r from-blue-600 to-blue-800">
+            <div className="absolute inset-0 bg-black/20" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <h1 className="text-3xl md:text-4xl font-bold text-white text-center px-4">
+                {business.businessName}
+              </h1>
+            </div>
+          </div>
+          
           <div className="p-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-6">
-              {business.businessName}
-            </h1>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-              <div>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                  Contact Information
-                </h2>
-                <div className="space-y-2 text-gray-600">
-                  <p>
+            {business.dbaTradeName && (
+              <p className="text-gray-600 text-sm mb-6 italic">
+                DBA: {business.dbaTradeName}
+              </p>
+            )}
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="space-y-6">
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h3 className="text-sm font-semibold text-gray-700 mb-2 flex items-center">
+                    <svg className="h-4 w-4 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    Location
+                  </h3>
+                  <p className="text-gray-600">
                     {business.buildingNumber} {business.street}
                     {business.unit && `, ${business.unit}`}
                   </p>
-                  <p>
+                  <p className="text-gray-600">
                     {business.borough}, NY {business.zipCode}
                   </p>
                 </div>
 
-                <div className="mt-6 space-y-3">
-                  <a
-                    href={googleMapsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center text-blue-600 hover:text-blue-800"
-                  >
-                    <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M10 0C6.478 0 3.618 2.86 3.618 6.382c0 4.788 6.382 13.618 6.382 13.618s6.382-8.83 6.382-13.618C16.382 2.86 13.522 0 10 0zm0 9.573a3.191 3.191 0 110-6.382 3.191 3.191 0 010 6.382z" />
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h3 className="text-sm font-semibold text-gray-700 mb-2 flex items-center">
+                    <svg className="h-4 w-4 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    View on Google Maps
-                  </a>
-                  <a
-                    href={directionsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center text-blue-600 hover:text-blue-800"
-                  >
-                    <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M10 3.873l6.436 6.437a.75.75 0 01-1.06 1.06L11 6.995v9.255a.75.75 0 01-1.5 0V6.995L5.124 11.37a.75.75 0 01-1.06-1.06L10 3.873z" />
+                    License Information
+                  </h3>
+                  <p className="text-gray-600">
+                    License #{business.licenseNumber}
+                    <br />
+                    Status: <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                      business.licenseStatus === 'ACTIVE' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                    }`}>
+                      {business.licenseStatus}
+                    </span>
+                  </p>
+                </div>
+
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h3 className="text-sm font-semibold text-gray-700 mb-2 flex items-center">
+                    <svg className="h-4 w-4 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                     </svg>
-                    Get Directions
-                  </a>
+                    Program Enrollment
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    <span className={`px-3 py-1 text-sm rounded-full font-medium ${
+                      business.darpEnrollmentStatus === 'ENROLLED' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
+                    }`}>
+                      DARP: {business.darpEnrollmentStatus}
+                    </span>
+                    <span className={`px-3 py-1 text-sm rounded-full font-medium ${
+                      business.rotowEnrollmentStatus === 'ENROLLED' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                    }`}>
+                      ROTOW: {business.rotowEnrollmentStatus}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h3 className="text-sm font-semibold text-gray-700 mb-2 flex items-center">
+                    <svg className="h-4 w-4 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    Community Information
+                  </h3>
+                  <p className="text-gray-600 text-sm">
+                    Community Board: {business.communityBoard}
+                    <br />
+                    Council District: {business.councilDistrict}
+                    <br />
+                    Police Precinct: {business.policePrecinct}
+                  </p>
                 </div>
               </div>
 
-              <div>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                  Service Details
-                </h2>
-                <div className="space-y-4">
-                  <div>
-                    <p className="text-gray-600 mb-2">Program Enrollment:</p>
-                    <div className="flex flex-wrap gap-2">
-                      {business.darpEnrollmentStatus === 'ENROLLED' && (
-                        <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">
-                          DARP Program
-                        </span>
-                      )}
-                      {business.rotowEnrollmentStatus === 'ENROLLED' && (
-                        <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
-                          ROTOW Program
-                        </span>
-                      )}
-                    </div>
+              <div className="space-y-6">
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h3 className="text-sm font-semibold text-gray-700 mb-2">Map Location</h3>
+                  <div className="aspect-w-16 aspect-h-9">
+                    <iframe
+                      src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&q=${encodeURIComponent(`${business.buildingNumber} ${business.street}, ${business.borough}, NY ${business.zipCode}`)}`}
+                      width="100%"
+                      height="300"
+                      style={{ border: 0 }}
+                      allowFullScreen
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      className="rounded-lg"
+                    />
                   </div>
-                  <div>
-                    <p className="text-gray-600 mb-2">License Information:</p>
-                    <p className="text-sm text-gray-500">
-                      License #{business.licenseNumber}
-                      <br />
-                      Status: {business.licenseStatus}
+                </div>
+
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h3 className="text-sm font-semibold text-gray-700 mb-2">Contact Information</h3>
+                  <p className="text-gray-600">
+                    <strong>Address:</strong><br />
+                    {business.buildingNumber} {business.street}
+                    {business.unit && `, ${business.unit}`}<br />
+                    {business.borough}, NY {business.zipCode}
+                  </p>
+                  {business.phone && (
+                    <p className="text-gray-600 mt-2">
+                      <strong>Phone:</strong> {business.phone}
                     </p>
-                  </div>
+                  )}
                 </div>
               </div>
             </div>
-
-            <div className="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden">
-              <iframe
-                src={embedUrl}
-                width="100%"
-                height="450"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="rounded-lg"
-              />
-            </div>
-          </div>
-
-          <div className="px-8 py-6 bg-gray-50 border-t border-gray-200">
-            <Link href="/directory" className="text-blue-600 hover:text-blue-800">
-              ← Back to Directory
-            </Link>
           </div>
         </div>
       </div>
