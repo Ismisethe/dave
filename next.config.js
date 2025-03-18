@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'export',
   images: {
     unoptimized: true,
     remotePatterns: [
@@ -9,8 +10,6 @@ const nextConfig = {
       },
     ],
   },
-  basePath: process.env.NODE_ENV === 'production' ? '/newyorktowtruck' : '',
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/newyorktowtruck/' : '',
   reactStrictMode: true
 }
 
