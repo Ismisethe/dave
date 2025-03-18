@@ -16,13 +16,16 @@ export default function AboutPage() {
 
         <section className="mb-12">
           <h2 className="text-2xl font-semibold mb-4">Our Mission</h2>
-          <p className="text-gray-600 mb-4">
-            The NYC Tow Truck Directory aims to provide New Yorkers with easy access to information about licensed tow truck companies in their area. We believe in transparency and helping consumers make informed decisions when they need tow truck services.
+          <p className="text-gray-600 mb-6">
+            The NYC Tow Truck Directory is your trusted resource for finding licensed and authorized tow truck companies in New York City. We&apos;ve partnered with the Department of Consumer and Worker Protection (DCWP) to provide accurate, up-to-date information about tow truck operators who are &quot;DARP&quot; (Direct Access Response Program) and &quot;ROTOW&quot; (Response to On-Street Towing Operations) certified.
           </p>
         </section>
 
         <section id="darp" className="mb-12">
           <h2 className="text-2xl font-semibold mb-4">DARP Program</h2>
+          <p className="text-gray-600 mb-6">
+            Our directory features companies that are &quot;DARP&quot; certified, meaning they&apos;ve been authorized to respond to emergency towing requests from the NYPD.
+          </p>
           <p className="text-gray-600 mb-4">
             The Directed Accident Response Program (DARP) is a city-regulated program that ensures tow truck companies follow proper procedures when responding to accidents. Companies enrolled in DARP must:
           </p>
@@ -40,6 +43,9 @@ export default function AboutPage() {
 
         <section id="rotow" className="mb-12">
           <h2 className="text-2xl font-semibold mb-4">ROTOW Program</h2>
+          <p className="text-gray-600 mb-6">
+            We&apos;re committed to maintaining the most current and accurate information about tow truck companies in NYC.
+          </p>
           <p className="text-gray-600 mb-4">
             The Removal of Towed Vehicles (ROTOW) program regulates how tow truck companies handle and store towed vehicles. Companies enrolled in ROTOW must:
           </p>

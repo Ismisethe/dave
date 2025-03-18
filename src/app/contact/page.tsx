@@ -18,7 +18,7 @@ export default function ContactPage() {
           <div>
             <h2 className="text-2xl font-semibold mb-4">Get in Touch</h2>
             <p className="text-gray-600 mb-6">
-              Have questions about our directory or need help finding a tow truck company? We're here to help.
+              Have questions about our directory or need assistance finding a tow truck company? We&apos;re here to help.
             </p>
 
             <form className="space-y-4">
@@ -86,6 +86,10 @@ export default function ContactPage() {
                 Send Message
               </button>
             </form>
+
+            <p className="text-gray-600 text-sm mt-4">
+              We&apos;ll get back to you as soon as possible.
+            </p>
           </div>
 
           <div>

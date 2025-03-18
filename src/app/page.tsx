@@ -51,7 +51,7 @@ export default async function HomePage() {
               NYC Tow Truck Directory: Find Authorized Towing Services Across New York 2025
             </h1>
             <p className="text-xl md:text-2xl mb-8 text-center max-w-3xl">
-              New York's premier tow truck directory connecting drivers with licensed, professional towing services 24/7.
+              New York&apos;s premier tow truck directory connecting drivers with licensed, professional towing services 24/7.
             </p>
             <div className="max-w-2xl w-full">
               <SearchBar />

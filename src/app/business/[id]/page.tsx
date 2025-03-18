@@ -2,6 +2,9 @@ import { Metadata } from 'next'
 import { getBusiness } from '@/lib/api'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { Business } from '@/types/business'
+import fs from 'fs/promises'
+import path from 'path'
 
 interface BusinessPageProps {
   params: {
@@ -26,6 +29,21 @@ export async function generateMetadata({ params }: BusinessPageProps): Promise<M
       title: `${business.businessName} | NYC Tow Truck Service`,
       description: `Contact ${business.businessName} for professional towing services in ${business.borough}, NYC. Licensed tow truck company offering 24/7 emergency towing and roadside assistance.`,
     }
+  }
+}
+
+export async function generateStaticParams() {
+  try {
+    const filePath = path.join(process.cwd(), 'public', 'data', 'businesses.json')
+    const jsonData = await fs.readFile(filePath, 'utf8')
+    const businesses = JSON.parse(jsonData)
+    
+    return businesses.map((business: Business) => ({
+      id: business.businessUniqueId
+    }))
+  } catch (error) {
+    console.error('Error generating static params:', error)
+    return []
   }
 }
 

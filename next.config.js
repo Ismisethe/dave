@@ -1,21 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
   images: {
     unoptimized: true,
-    domains: ['localhost']
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
-  basePath: process.env.NODE_ENV === 'production' ? '/tow-truck-directory' : '',
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/tow-truck-directory/' : '',
-  reactStrictMode: true,
-  swcMinify: true,
-  webpack: (config) => {
-    config.module.rules.push({
-      test: /\.json$/,
-      type: 'json',
-    });
-    return config;
-  },
+  basePath: process.env.NODE_ENV === 'production' ? '/newyorktowtruck' : '',
+  assetPrefix: process.env.NODE_ENV === 'production' ? '/newyorktowtruck/' : '',
+  reactStrictMode: true
 }
 
 module.exports = nextConfig 
